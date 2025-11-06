@@ -8,7 +8,8 @@ enum PlayerState {
 	duck,
 	slide,
 	dead,
-	grab
+	grab,
+	swinming,
 }
 
 @onready var animation: AnimatedSprite2D = $AnimatedSprite2D
@@ -17,6 +18,7 @@ enum PlayerState {
 @onready var hitbox_collision_shape: CollisionShape2D = $hitbox/CollisionShape2D
 @onready var leftWa_wall_detector: RayCast2D = $LeftWallDetector
 @onready var rightWa_wall_detector: RayCast2D = $RightWallDetector
+
 @export var max_speed = 100.0
 @export var accel = 500
 @export var decel = 500
@@ -24,6 +26,7 @@ enum PlayerState {
 @export var grab_decel = 45
 @export var grab_gravity = 100
 @export var grab_jump_reflect = 100
+@export var swinming_pop = 100
 
 const JUMP_VELOCITY = -300
 
@@ -56,6 +59,8 @@ func _physics_process(delta: float) -> void:
 			dead_state(delta)
 		PlayerState.grab:
 			grab_state(delta)
+		PlayerState.swinming:
+			swinming_state(delta)
 	
 	move_and_slide()
 
@@ -117,7 +122,7 @@ func fall_state(delta):
 			go_to_walk_state()
 		return
 	
-	if leftWa_wall_detector.is_colliding() or rightWa_wall_detector.is_colliding():
+	if (leftWa_wall_detector.is_colliding() or rightWa_wall_detector.is_colliding()) && is_on_wall():
 		go_to_grab_state()
 		return
 
@@ -163,6 +168,20 @@ func grab_state(delta):
 	if Input.is_action_just_pressed("jump"):
 		velocity.x = direction * grab_jump_reflect
 		go_to_jump_state()
+
+func swinming_state(_delta):
+	var vertical_direction = Input.get_axis("jump", "duck")
+	update_direction()
+	
+	if direction:
+		velocity.x = swinming_pop * direction
+	else:
+		velocity.x = 0
+	
+	if vertical_direction:
+		velocity.y = swinming_pop * vertical_direction
+	else:
+		velocity.y = 0
 
 #------------ go To --------------
 
@@ -215,6 +234,10 @@ func go_to_grab_state():
 	status = PlayerState.grab
 	animation.play("grab")
 
+func go_to_swinming_state():
+	status = PlayerState.swinming
+	animation.play("swiming")
+
 # ------------ end go To ---------------
 
 func update_direction():
@@ -260,8 +283,11 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 
 func _on_hitbox_body_entered(body: Node2D) -> void:
 	if body.is_in_group("LethalArea"):
-		print("Está funcionando")
+		print("Lava ok")
 		go_to_dead_state()
+	elif body.is_in_group("Water"):
+		print("Water ok")
+		go_to_swinming_state()
 
 func hit_enemy(area: Area2D):
 	if velocity.y > 0:

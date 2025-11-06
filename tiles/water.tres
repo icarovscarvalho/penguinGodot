@@ -1,0 +1,58 @@
+[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://b68fs5nydyyjq"]
+
+[ext_resource type="Texture2D" uid="uid://sax5hv4g55f3" path="res://sprites/Seasonal Tilesets/3 - Tropics/Tropics_entities (16 x 16).png" id="1_1ajp8"]
+[ext_resource type="Texture2D" uid="uid://d2kewpu18jvej" path="res://sprites/Seasonal Tilesets/5 - Misc. universal tiles/Water_frames (16 x 32).png" id="2_quu65"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sng2h"]
+texture = ExtResource("1_1ajp8")
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+11:2/0 = 0
+12:2/0 = 0
+13:2/0 = 0
+14:2/0 = 0
+15:2/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+9:3/0 = 0
+11:3/0 = 0
+13:3/0 = 0
+15:3/0 = 0
+12:5/animation_separation = Vector2i(1, 0)
+12:5/animation_frame_0/duration = 0.3
+12:5/animation_frame_1/duration = 0.3
+12:5/0 = 0
+12:6/animation_separation = Vector2i(1, 0)
+12:6/animation_frame_0/duration = 0.3
+12:6/animation_frame_1/duration = 0.3
+12:6/0 = 0
+12:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+12:7/0 = 0
+14:7/0 = 0
+12:8/0 = 0
+13:8/0 = 0
+14:8/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0lu6w"]
+texture = ExtResource("2_quu65")
+0:0/animation_frame_0/duration = 0.3
+0:0/animation_frame_1/duration = 0.3
+0:0/0 = 0
+0:0/0/modulate = Color(1, 1, 1, 0.5568628)
+0:1/animation_frame_0/duration = 0.3
+0:1/animation_frame_1/duration = 0.3
+0:1/0 = 0
+0:1/0/modulate = Color(1, 1, 1, 0.5568628)
+
+[resource]
+physics_layer_0/collision_layer = 16
+physics_layer_0/collision_mask = 2
+sources/0 = SubResource("TileSetAtlasSource_sng2h")
+sources/1 = SubResource("TileSetAtlasSource_0lu6w")

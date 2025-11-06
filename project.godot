@@ -27,6 +27,7 @@ window/stretch/mode="canvas_items"
 Player=""
 Enemies=""
 LethalArea=""
+Water=""
 
 [input]
 

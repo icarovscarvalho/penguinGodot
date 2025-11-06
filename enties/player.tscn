@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://drkkreu8pye3v"]
+[gd_scene load_steps=38 format=3 uid="uid://drkkreu8pye3v"]
 
 [ext_resource type="Script" uid="uid://b71dxymtokv47" path="res://scripts/player.gd" id="1_ymtht"]
 [ext_resource type="Texture2D" uid="uid://bnm2qumwjv7cg" path="res://sprites/1 - Penguin/Hurt (16 x 16).png" id="2_7ysvd"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://d1ffy2v8dqolb" path="res://sprites/1 - Penguin/Waddling (16 x 16).png" id="3_qdukx"]
 [ext_resource type="Texture2D" uid="uid://he8dycurjmng" path="res://sprites/1 - Penguin/Wall_Slide (16x16).png" id="6_b0tyw"]
 [ext_resource type="Texture2D" uid="uid://bedpd8tdafc5c" path="res://sprites/1 - Penguin/Belly_Sliding (16 x 16).png" id="6_kmcjr"]
+[ext_resource type="Texture2D" uid="uid://cn7vfqokndwxk" path="res://sprites/1 - Penguin/Swimming (16 x 16).png" id="10_swpjn"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c2ews"]
 radius = 5.5
@@ -66,6 +67,22 @@ region = Rect2(16, 0, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_hcox3"]
 atlas = ExtResource("6_kmcjr")
 region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uixw2"]
+atlas = ExtResource("10_swpjn")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vauef"]
+atlas = ExtResource("10_swpjn")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_duqc0"]
+atlas = ExtResource("10_swpjn")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rq3qj"]
+atlas = ExtResource("10_swpjn")
+region = Rect2(48, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7s23y"]
 atlas = ExtResource("3_qdukx")
@@ -181,6 +198,23 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_uixw2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vauef")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_duqc0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rq3qj")
+}],
+"loop": true,
+"name": &"swiming",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_7s23y")
 }, {
 "duration": 1.0,
@@ -208,7 +242,7 @@ size = Vector2(11, 15)
 
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 collision_layer = 2
-collision_mask = 41
+collision_mask = 9
 script = ExtResource("1_ymtht")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -219,13 +253,13 @@ shape = SubResource("CapsuleShape2D_c2ews")
 z_index = 1
 scale = Vector2(1, 1.0625)
 sprite_frames = SubResource("SpriteFrames_7s23y")
-animation = &"fall"
+animation = &"swiming"
 autoplay = "idle"
 
 [node name="hitbox" type="Area2D" parent="."]
 visibility_layer = 0
 z_index = 1
-collision_mask = 33
+collision_mask = 49
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox"]
 top_level = true

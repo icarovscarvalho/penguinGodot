@@ -26,7 +26,10 @@ enum PlayerState {
 @export var grab_decel = 45
 @export var grab_gravity = 100
 @export var grab_jump_reflect = 100
-@export var swinming_pop = 100
+@export var water_accel = 100
+@export var water_decel = 200
+@export var water_fall_gravity = 200
+@export var swimming_push = -50
 
 const JUMP_VELOCITY = -300
 
@@ -39,8 +42,6 @@ func _ready() -> void:
 	go_to_idle_state()
 
 func _physics_process(delta: float) -> void:
-	if not is_on_floor():
-		velocity += get_gravity() * delta
 	
 	match status:
 		PlayerState.idle:
@@ -65,6 +66,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func idle_state(delta):
+	apply_gravity(delta)
 	move(delta)
 	if velocity.x != 0:
 		go_to_walk_state()
@@ -79,6 +81,7 @@ func idle_state(delta):
 		return
 
 func walk_state(delta):
+	apply_gravity(delta)
 	move(delta)
 	if velocity.x == 0:
 		go_to_idle_state()
@@ -98,6 +101,7 @@ func walk_state(delta):
 		return
 
 func jump_state(delta):
+	apply_gravity(delta)
 	move(delta)
 	if Input.is_action_just_pressed("jump") && can_jump():
 		go_to_jump_state()
@@ -108,6 +112,7 @@ func jump_state(delta):
 		return
 
 func fall_state(delta):
+	apply_gravity(delta)
 	move(delta)
 	
 	if Input.is_action_just_pressed("jump") && can_jump():
@@ -126,7 +131,8 @@ func fall_state(delta):
 		go_to_grab_state()
 		return
 
-func duck_state(_delta):
+func duck_state(delta):
+	apply_gravity(delta)
 	update_direction()
 	if Input.is_action_just_released("duck"):
 		exit_from_duck_state()
@@ -134,6 +140,8 @@ func duck_state(_delta):
 		return
 
 func slide_state(delta):
+	apply_gravity(delta)
+	
 	velocity.x = move_toward(velocity.x, 0, slide_decel * delta)
 	if Input.is_action_just_released("duck"):
 		exit_from_slide_state()
@@ -169,19 +177,32 @@ func grab_state(delta):
 		velocity.x = direction * grab_jump_reflect
 		go_to_jump_state()
 
-func swinming_state(_delta):
+func swinming_state(delta):
 	var vertical_direction = Input.get_axis("jump", "duck")
 	update_direction()
 	
 	if direction:
-		velocity.x = swinming_pop * direction
+		velocity.x = move_toward(velocity.x, water_accel * direction, 200 * delta)
 	else:
-		velocity.x = 0
+		velocity.x = move_toward(velocity.x, 0, water_decel * delta)
 	
-	if vertical_direction:
-		velocity.y = swinming_pop * vertical_direction
-	else:
-		velocity.y = 0
+	#Player sofre ação da gravidade em Y
+	velocity.y += water_accel * delta
+	
+	# Limita a velocidade máxima de queda ao entrar na água
+	velocity.y = min(velocity.y, water_fall_gravity)
+	
+	if Input.is_action_just_pressed("jump"):
+		velocity.y = swimming_push
+	
+	#Assume controle vertical(Y) do Player
+	#if vertical_direction:
+		#velocity.y = move_toward(velocity.y, water_accel * vertical_direction, 200 * delta)
+	#else:
+		#velocity.y = move_toward(velocity.y, 0, water_decel * delta)
+	
+	# Limita a velocidade máxima de queda ao entrar na água
+	# velocity.y = min(velocity.y, water_fall_gravity)
 
 #------------ go To --------------
 
@@ -258,6 +279,10 @@ func move(delta):
 	else:
 		velocity.x = move_toward(velocity.x, 0, decel * delta)
 
+func apply_gravity(delta):
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+
 func can_jump() -> bool:
 	return jump_count < max_jump
 
@@ -283,11 +308,14 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 
 func _on_hitbox_body_entered(body: Node2D) -> void:
 	if body.is_in_group("LethalArea"):
-		print("Lava ok")
 		go_to_dead_state()
 	elif body.is_in_group("Water"):
-		print("Water ok")
 		go_to_swinming_state()
+
+func _on_hitbox_body_exited(body: Node2D) -> void:
+	if body.is_in_group("Water"):
+		jump_count = 0
+		go_to_jump_state()
 
 func hit_enemy(area: Area2D):
 	if velocity.y > 0:

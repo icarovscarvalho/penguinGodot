@@ -1,0 +1,72 @@
+[gd_scene load_steps=9 format=3 uid="uid://ce5q4322c55pi"]
+
+[ext_resource type="Script" uid="uid://cpo4konvvt3pc" path="res://scripts/broken_block.gd" id="1_bayek"]
+[ext_resource type="Texture2D" uid="uid://bkafym51lje3f" path="res://sprites/Seasonal Tilesets/5 - Misc. universal tiles/Blocks (16 x 16).png" id="1_yo3jq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atrjq"]
+atlas = ExtResource("1_yo3jq")
+region = Rect2(64, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c5cki"]
+atlas = ExtResource("1_yo3jq")
+region = Rect2(48, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ijb5g"]
+atlas = ExtResource("1_yo3jq")
+region = Rect2(80, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_44mp2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atrjq")
+}],
+"loop": false,
+"name": &"broken",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c5cki")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ijb5g")
+}],
+"loop": true,
+"name": &"falling",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bayek"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_atrjq"]
+size = Vector2(16, 2)
+
+[node name="BrokenBlock" type="StaticBody2D"]
+collision_mask = 2
+script = ExtResource("1_bayek")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_44mp2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_bayek")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -9)
+shape = SubResource("RectangleShape2D_atrjq")
+debug_color = Color(0.8544618, 0.2584806, 0.6642913, 0.41960785)
+
+[node name="BrokenTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="BrokenTimer" to="." method="_on_broken_timer_timeout"]

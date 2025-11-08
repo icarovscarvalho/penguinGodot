@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=4 uid="uid://cyckku5fs2l8c"]
+[gd_scene load_steps=30 format=4 uid="uid://cyckku5fs2l8c"]
 
 [ext_resource type="PackedScene" uid="uid://drkkreu8pye3v" path="res://enties/player.tscn" id="1_bmxgx"]
 [ext_resource type="Texture2D" uid="uid://bxilcjtrclhue" path="res://sprites/Seasonal Tilesets/3 - Tropics/Terrain (16 x 16).png" id="2_ry6l7"]
@@ -15,6 +15,8 @@
 [ext_resource type="Texture2D" uid="uid://bdwkwsccivw5i" path="res://sprites/Seasonal Tilesets/3 - Tropics/Background parts/1 - Waters_version_1.png" id="11_xnncp"]
 [ext_resource type="PackedScene" uid="uid://huyjogqyowxh" path="res://enties/level_end.tscn" id="14_xflqb"]
 [ext_resource type="PackedScene" uid="uid://csfku2dd2aq6w" path="res://enties/skeleton.tscn" id="15_xnncp"]
+[ext_resource type="PackedScene" uid="uid://cft3q7ia1sgf8" path="res://enties/moving_plataform.tscn" id="16_mjtd1"]
+[ext_resource type="PackedScene" uid="uid://ce5q4322c55pi" path="res://enties/broken_block.tscn" id="17_kjkl5"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_17pmc"]
 texture = ExtResource("2_ry6l7")
@@ -322,7 +324,7 @@ size = Vector2(32, 29)
 [node name="tropic" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_bmxgx")]
-position = Vector2(488, 8)
+position = Vector2(232, 8)
 
 [node name="Node2D" type="Node2D" parent="."]
 
@@ -426,4 +428,25 @@ position = Vector2(632, 0)
 [node name="Skeleton5" parent="." instance=ExtResource("15_xnncp")]
 position = Vector2(792, 32)
 
+[node name="movingPlataform" parent="." instance=ExtResource("16_mjtd1")]
+position = Vector2(200, 160)
+
+[node name="Target" parent="movingPlataform" index="1"]
+position = Vector2(0, -64)
+
+[node name="movingPlataform2" parent="." instance=ExtResource("16_mjtd1")]
+position = Vector2(264, 96)
+time = 4
+
+[node name="Target" parent="movingPlataform2" index="1"]
+position = Vector2(472, 0)
+
+[node name="BrokenBlock" parent="." instance=ExtResource("17_kjkl5")]
+position = Vector2(184, -16)
+
+[node name="BrokenBlock2" parent="." instance=ExtResource("17_kjkl5")]
+position = Vector2(104, -16)
+
 [editable path="levelEnd"]
+[editable path="movingPlataform"]
+[editable path="movingPlataform2"]
